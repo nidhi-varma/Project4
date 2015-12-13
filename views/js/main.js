@@ -310,8 +310,8 @@ var resizePizzas = function(size) {
  * This code generates all the menu of pizzas
  */
 window.performance.mark("mark_start_generating");
+var pizzasDiv = document.getElementById("randomPizzas");
 for (var i = 2; i < 100; i++) {
-    var pizzasDiv = document.getElementById("randomPizzas");
     pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 window.performance.mark("mark_end_generating");
@@ -339,11 +339,11 @@ function logAverageFrame(times) {
 function updatePositions() {
     frame++;
     window.performance.mark("mark_start_frame");
-    var items = document.querySelectorAll('.mover');
-    var phases = [ 0, 0, 0, 0, 0 ];
+    var items = document.getElementsByClassName('mover');
+    var phases = [];
 
     for (var i = 0; i < 5; i++) {
-        phases[i] = Math.sin((document.body.scrollTop / 1250) + i);
+        phases.push(Math.sin((document.body.scrollTop / 1250) + i));
     }
 
     for (var i = 0; i < items.length; i++) {
@@ -367,10 +367,28 @@ window.addEventListener('scroll', updatePositions);
  * An Event listener is attached to the 'DOMContentLoaded' event which
  * adds the pizza images to the document as part of the moving background.
  */
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', addBackgroundPizza);
+/*
+ * An Event listener is attached to the 'resize' event which adds more
+ * pizza images to the document if the window size increases.
+ */
+window.addEventListener('resize', addBackgroundPizza, false);
+/*
+ * The randomPizzaCount variable stores the total number of pizza created
+ */
+var randomPizzaCount = 0;
+
+function addBackgroundPizza() {
     var cols = 8;
     var s = 256;
-    for (var i = 0; i < 200; i++) {
+    var windowHeight = window.innerHeight;
+    n = cols * Math.ceil(windowHeight/256);
+
+    /*
+     * The following loop will create additional pizzas if n > pizzas already
+     * created.
+     */
+    for (var i = randomPizzaCount; i < n; i++) {
         var elem = document.createElement('img');
         elem.className = 'mover';
         elem.src = "images/pizza.png";
@@ -380,5 +398,12 @@ document.addEventListener('DOMContentLoaded', function() {
         elem.style.top = (Math.floor(i / cols) * s) + 'px';
         document.querySelector("#movingPizzas1").appendChild(elem);
     }
+    /*
+     * If we created more pizzas than already existing, set the count
+     * of total pizzas to n
+     */
+    if (n > randomPizzaCount) {
+        randomPizzaCount = n;
+    }
     updatePositions();
-});
+}

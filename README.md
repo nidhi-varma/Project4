@@ -13,6 +13,13 @@ On this website you can
 
 You cannot contact them because they are a virtual pizzeria.
 
+### How to order a pizza
+
+* Open index.html in your browser
+* Click on Cameron's Pizzeria link
+* Scroll up and down to browse the menu
+* Click on Pick a Pizza now
+
 ### Optimizations
 
 ####Part 1: Optimize PageSpeed Insights score for index.html
